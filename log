@@ -1,0 +1,24 @@
+import os
+import fnmatch
+
+def delete_bot_logs(directory='.'):
+    patterns = ['bot.log', 'bot.*.log']
+    deleted_files = 0
+
+    for filename in os.listdir(directory):
+        if any(fnmatch.fnmatch(filename, pattern) for pattern in patterns):
+            file_path = os.path.join(directory, filename)
+            try:
+                os.remove(file_path)
+                print(f"Deleted: {file_path}")
+                deleted_files += 1
+            except Exception as e:
+                print(f"Error deleting {file_path}: {e}")
+
+    if deleted_files == 0:
+        print("No matching log files found.")
+    else:
+        print(f"Total files deleted: {deleted_files}")
+
+if __name__ == '__main__':
+    delete_bot_logs()

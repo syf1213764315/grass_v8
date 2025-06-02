@@ -1,0 +1,6 @@
+aiohttp
+aiofiles
+colorama
+loguru
+websockets-proxy
+pyopenssl
