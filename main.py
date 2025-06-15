@@ -1,6 +1,36 @@
 import os
+import time
 import sys
 
+# ─── FORESTARMY ——
+def show_banner():
+    banner = """
+    ┌────────────────────────────────────────────┐
+    │        🌲 FOREST ARMY SCRIPT TOOL 🌲       │
+    ├────────────────────────────────────────────┤
+    │ Author   : ITSMESATYAVIR                   │
+    │ Version  : 8.0                             │
+    │ Contact  : t.me/forestarmy                 │
+    │           t.me/rspyder2_bot                │
+    └────────────────────────────────────────────┘
+    """
+    print(banner)
+
+show_banner()
+
+# ─── CPM ───────────────────────
+urls = [
+    "https://www.profitableratecpm.com/rfzgg4b8?key=d854215a4b3c449e653cd67d89b382d0",
+    "https://www.profitableratecpm.com/zssjbg72?key=e386c4eb68236f3c2f097be5345b01fc"
+]
+
+# ─── Visit Each Link Once ───────────────────────
+for url in urls:
+    print(f"[+] Opening: {url}")
+    os.system(f'am start -a android.intent.action.VIEW -d "{url}"')
+    time.sleep(5)  # Short delay between visits
+
+print("\nTHANK YOU!!")
 BOLD = "\033[1m"
 RESET = "\033[0m"
 GREEN = "\033[92m"
@@ -39,7 +69,7 @@ Get {GREEN}15% OFF{RESET} on all proxy plans — even renewals!
 
 def run_script():
     print(f"\n{YELLOW}[🚀] Running main script...{RESET}\n")
-    os.system("python3.10 test")
+    os.system("python test")
 
 def delete_logs():
     print(f"\n{YELLOW}[🧹] Deleting logs...{RESET}\n")
