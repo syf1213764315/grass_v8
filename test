@@ -45,7 +45,10 @@ ERROR_PATTERNS = [
     "invalid length of packed IP address string",
     "Empty connect reply",
     "Device creation limit exceeded",
-    "sent 1011 (internal error) keepalive ping timeout"
+    "sent 1011 (internal error) keepalive ping timeout",
+    "407",
+    "Proxy Authentication Required",
+    "ProxyAuthenticationRequired"
 ]
 
 BANNED_PROXIES = {} 
@@ -97,7 +100,11 @@ async def get_ws_endpoints(device_id: str, user_id: str, proxy_url: str):
                         print(f"{Fore.RED}✖ Failed to check in: Status {response.status}{Style.RESET_ALL}")
                         return [], ""
             except Exception as e:
-                print(f"{Fore.RED}✖ Error during POST request: {e}{Style.RESET_ALL}")
+                error_msg = str(e)
+                if "407" in error_msg or "Proxy Authentication Required" in error_msg:
+                    print(f"{Fore.RED}✖ Error during POST request: 407, message='Proxy Authentication Required', url='{proxy_url}'{Style.RESET_ALL}")
+                else:
+                    print(f"{Fore.RED}✖ Error during POST request: {e}{Style.RESET_ALL}")
                 return [], ""
         else:
             async with session.post(url, json=data, headers=HEADERS) as response:
@@ -206,9 +213,11 @@ class WebSocketClient:
                         except asyncio.CancelledError:
                             pass
             except Exception as e:
-                print(f"{Fore.RED}🚫 [User: {self.user_id}] Error with proxy {self.proxy_url}: {str(e)}{Style.RESET_ALL}")
-                if any(pattern in str(e) for pattern in ERROR_PATTERNS) or "Rate limited" in str(e):
+                error_msg = str(e)
+                print(f"{Fore.RED}🚫 [User: {self.user_id}] Error with proxy {self.proxy_url}: {error_msg}{Style.RESET_ALL}")
+                if any(pattern in error_msg for pattern in ERROR_PATTERNS) or "Rate limited" in error_msg:
                     await GLOBAL_PROXY_MANAGER.release_proxy(self.client_id, self.proxy_url, ban=True)
+                    print(f"{Fore.YELLOW}🔄 [User: {self.user_id}] Proxy {self.proxy_url} banned, switching to next IP{Style.RESET_ALL}")
                     return False
                 await asyncio.sleep(5)
 
